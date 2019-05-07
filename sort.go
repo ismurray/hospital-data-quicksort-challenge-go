@@ -1,8 +1,12 @@
 package main
 
 import (
+    "encoding/csv"
     "fmt"
+    "log"
     "math/rand"
+    "os"
+    "reflect"
 )
 
 func qsort(s []int) []int {
@@ -36,6 +40,35 @@ func qsort(s []int) []int {
 }
 
 func main() {
+  rows := readOrders("Unplanned_Hospital_Visits_-_Hospital.csv")
+  fmt.Println(rows[0])
+  fmt.Println(rows[1][12])
+  fmt.Println(reflect.TypeOf(rows[1][12]))
+  fmt.Println(rows[3][12])
+  fmt.Println(reflect.TypeOf(rows[3][12]))
   arr := []int{2, 1, 42, 13, 99}
 	fmt.Println(qsort(arr))
+}
+
+func readCSV(name string) [][]string {
+
+	f, err := os.Open(name)
+
+	if err != nil {
+		log.Fatalf("Cannot open '%s': %s\n", name, err.Error())
+	}
+
+  // Close the file when finished
+	defer f.Close()
+
+	r := csv.NewReader(f)
+
+  // read the whole file at once, may need to be changed for larger datasets
+	rows, err := r.ReadAll()
+
+	if err != nil {
+		log.Fatalln("Cannot read CSV data:", err.Error())
+	}
+
+	return rows
 }
